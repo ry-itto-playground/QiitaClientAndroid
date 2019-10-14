@@ -31,23 +31,9 @@ class HomeFragment : Fragment() {
             ViewModelProviders.of(this).get(HomeViewModel::class.java)
         val root = inflater.inflate(R.layout.fragment_home, container, false)
         val listView: ListView = root.findViewById(R.id.listView_home)
-        listView.adapter = ArrayAdapter(this.context!!, android.R.layout.simple_list_item_1, emptyArray<String>())
-
-        val handler = Handler()
-
-        thread {
-            try {
-                val response = QiitaAPIClient.fetchArticles("android")
-                val articleTitles: List<String> = response.body()?.map { it.title } ?: emptyList()
-
-                handler.post(Runnable {
-                    listView.adapter = ArrayAdapter(this.context!!, android.R.layout.simple_list_item_1, articleTitles)
-                })
-                Log.w("retrofit", "fetchArticles")
-            } catch (e: Exception) {
-                Log.w("retrofit", "fetchArticles : $e")
-            }
-        }
+        homeViewModel.articles.observe(this, Observer { articles ->
+            listView.adapter = ArrayAdapter(this.context!!, android.R.layout.simple_list_item_1, articles.map { it.title })
+        })
         return root
     }
 }
