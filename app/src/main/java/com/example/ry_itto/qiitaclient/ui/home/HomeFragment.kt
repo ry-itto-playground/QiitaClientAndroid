@@ -15,12 +15,17 @@ import androidx.lifecycle.ViewModelProviders
 import com.example.ry_itto.qiitaclient.R
 import com.example.ry_itto.qiitaclient.domain.QiitaAPIClient
 import com.example.ry_itto.qiitaclient.domain.model.Article
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.schedulers.Schedulers
+import org.reactivestreams.Subscriber
 import java.lang.Exception
 import kotlin.concurrent.thread
 
 class HomeFragment : Fragment() {
 
     private lateinit var homeViewModel: HomeViewModel
+    private val disposable = CompositeDisposable()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -31,9 +36,22 @@ class HomeFragment : Fragment() {
             ViewModelProviders.of(this).get(HomeViewModel::class.java)
         val root = inflater.inflate(R.layout.fragment_home, container, false)
         val listView: ListView = root.findViewById(R.id.listView_home)
-        homeViewModel.articles.observe(this, Observer { articles ->
-            listView.adapter = ArrayAdapter(this.context!!, android.R.layout.simple_list_item_1, articles.map { it.title })
-        })
+//        homeViewModel.articles.observe(this, Observer { articles ->
+//            listView.adapter = ArrayAdapter(this.context!!, android.R.layout.simple_list_item_1, articles.map { it.title })
+//        })
+        disposable.add(homeViewModel.articles
+            .onErrorReturn {
+                Log.w("reactivex", it)
+                emptyList()
+            }
+            .subscribe({ articles -> listView.adapter = ArrayAdapter(this.context!!, android.R.layout.simple_list_item_1, articles.map { it.title })},
+                { t -> t.printStackTrace() }))
+
         return root
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        disposable.dispose()
     }
 }
