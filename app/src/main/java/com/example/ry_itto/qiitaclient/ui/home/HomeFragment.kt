@@ -27,18 +27,12 @@ class HomeFragment : Fragment() {
     private lateinit var homeViewModel: HomeViewModel
     private val disposable = CompositeDisposable()
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
         homeViewModel =
             ViewModelProviders.of(this).get(HomeViewModel::class.java)
-        val root = inflater.inflate(R.layout.fragment_home, container, false)
-        val listView: ListView = root.findViewById(R.id.listView_home)
-//        homeViewModel.articles.observe(this, Observer { articles ->
-//            listView.adapter = ArrayAdapter(this.context!!, android.R.layout.simple_list_item_1, articles.map { it.title })
-//        })
+        val listView: ListView = view.findViewById(R.id.listView_home)
         disposable.add(homeViewModel.articles
             .onErrorReturn {
                 Log.w("reactivex", it)
@@ -46,8 +40,14 @@ class HomeFragment : Fragment() {
             }
             .subscribe({ articles -> listView.adapter = ArrayAdapter(this.context!!, android.R.layout.simple_list_item_1, articles.map { it.title })},
                 { t -> t.printStackTrace() }))
+    }
 
-        return root
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        return inflater.inflate(R.layout.fragment_home, container, false)
     }
 
     override fun onDestroy() {

@@ -16,28 +16,7 @@ import java.lang.Exception
 
 class HomeViewModel : ViewModel() {
     // Output
-//    val articles: Observable<List<Article>> = QiitaAPIClient.fetchArticles("android")
-    var articles = QiitaAPIClient.fetchArticles("android")
+    val articles = QiitaAPIClient.fetchArticles("android")
         .subscribeOn(Schedulers.io())
         .observeOn(AndroidSchedulers.mainThread())
-
-    init {
-//        articles.onNext(emptyList())
-//        QiitaAPIClient.fetchArticles("android")
-//            .subscribe()
-    }
-
-//    private val _articles = MutableLiveData<List<Article>>().apply {
-//        value = emptyList()
-//        try {
-//            val response = QiitaAPIClient.fetchArticles("android")
-//            value = response.body() ?: emptyList()
-//
-//            Log.w("retrofit", "fetchArticles")
-//        } catch (e: Exception) {
-//            value = emptyList()
-//            Log.w("retrofit", "fetchArticles : $e")
-//        }
-//    }
-//    val articles: LiveData<List<Article>> = _articles
 }
