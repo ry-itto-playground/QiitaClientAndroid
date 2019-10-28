@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
+import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.ry_itto.qiitaclient.R
@@ -28,6 +29,7 @@ class HomeFragment : Fragment() {
         recyclerView.apply {
             adapter = homeViewAdapter
             layoutManager = LinearLayoutManager(this.context!!, LinearLayoutManager.VERTICAL, false)
+            addItemDecoration(DividerItemDecoration(this.context, DividerItemDecoration.VERTICAL))
         }
 
         disposable.add(homeViewModel.articles
