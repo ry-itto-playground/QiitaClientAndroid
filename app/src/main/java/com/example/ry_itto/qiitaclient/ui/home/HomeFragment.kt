@@ -5,10 +5,10 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ArrayAdapter
-import android.widget.ListView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.ry_itto.qiitaclient.R
 import io.reactivex.disposables.CompositeDisposable
 
@@ -22,14 +22,24 @@ class HomeFragment : Fragment() {
 
         homeViewModel =
             ViewModelProviders.of(this).get(HomeViewModel::class.java)
-        val listView: ListView = view.findViewById(R.id.listView_home)
+
+        val recyclerView: RecyclerView = view.findViewById(R.id.recycler_view)
+        val homeViewAdapter = HomeViewAdapter(this.context!!, mutableListOf())
+        recyclerView.apply {
+            adapter = homeViewAdapter
+            layoutManager = LinearLayoutManager(this.context!!, LinearLayoutManager.VERTICAL, false)
+        }
+
         disposable.add(homeViewModel.articles
             .onErrorReturn {
                 Log.w("reactivex", it)
                 emptyList()
             }
-            .subscribe({ articles -> listView.adapter = ArrayAdapter(this.context!!, android.R.layout.simple_list_item_1, articles.map { it.title })},
-                { t -> t.printStackTrace() }))
+            .map { articles -> articles.map { it.title } }
+            .subscribe({ articles ->
+                homeViewAdapter.itemList = articles
+                homeViewAdapter.notifyDataSetChanged()
+            }))
     }
 
     override fun onCreateView(
