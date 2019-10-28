@@ -1,26 +1,16 @@
 package com.example.ry_itto.qiitaclient.ui.home
 
 import android.os.Bundle
-import android.os.Handler
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.ListView
-import android.widget.TextView
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.example.ry_itto.qiitaclient.R
-import com.example.ry_itto.qiitaclient.domain.QiitaAPIClient
-import com.example.ry_itto.qiitaclient.domain.model.Article
-import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.schedulers.Schedulers
-import org.reactivestreams.Subscriber
-import java.lang.Exception
-import kotlin.concurrent.thread
 
 class HomeFragment : Fragment() {
 
